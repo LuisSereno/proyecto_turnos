@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% if configuracion %}
+        {% trans "Editar Configuración" %}
+    {% else %}
+        {% trans "Nueva Configuración" %}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{% url 'turnos:config_lista' %}">{% trans "Configuraciones" %}</a></li>
+    {% if configuracion %}
+        <li class="breadcrumb-item"><a href="{% url 'turnos:config_detalle' configuracion.id %}">{{ configuracion.nombre }}</a></li>
+        <li class="breadcrumb-item active">{% trans "Editar" %}</li>
+    {% else %}
+        <li class="breadcrumb-item active">{% trans "Nueva" %}</li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    {% if configuracion %}
+                        <i class="fas fa-edit me-2"></i>{% trans "Editar Configuración" %}
+                    {% else %}
+                        <i class="fas fa-plus me-2"></i>{% trans "Nueva Configuración" %}
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" action="" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {% include "turnos/config/form_fields.html" with form=form %}
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% if configuracion %}{% url 'turnos:config_detalle' configuracion.id %}{% else %}{% url 'turnos:config_lista' %}{% endif %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>{% trans "Cancelar" %}
+                        </a>
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-save me-2"></i>
+                            {% if configuracion %}
+                                {% trans "Guardar Cambios" %}
+                            {% else %}
+                                {% trans "Crear Configuración" %}
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

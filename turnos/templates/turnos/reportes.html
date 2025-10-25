@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Reportes y Analíticas" %}{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item active">{% trans "Reportes" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+        <i class="fas fa-chart-pie me-2"></i>{% trans "Reportes y Analíticas" %}
+    </h2>
+</div>
+
+<!-- Tarjetas de Reportes -->
+<div class="row">
+    <!-- Reporte de Carga -->
+    <div class="col-lg-4 mb-4">
+        <div class="card report-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="report-icon bg-primary mb-3">
+                    <i class="fas fa-chart-line fa-3x text-white"></i>
+                </div>
+                <h4>{% trans "Carga de Trabajo" %}</h4>
+                <p class="text-muted">
+                    {% trans "Análisis detallado de la distribución de turnos por enfermera y carga horaria." %}
+                </p>
+                <a href="{% url 'turnos:reporte_carga' %}" class="btn btn-primary">
+                    <i class="fas fa-eye me-2"></i>{% trans "Ver Reporte" %}
+                </a>
+            </div>
+            <div class="card-footer bg-light">
+                <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>{% trans "Actualizado hace" %} {{ stats.ultima_actualizacion_carga|timesince }}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reporte de Conflictos -->
+    <div class="col-lg-4 mb-4">
+        <div class="card report-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="report-icon bg-danger mb-3">
+                    <i class="fas fa-exclamation-triangle fa-3x text-white"></i>
+                </div>
+                <h4>{% trans "Conflictos" %}</h4>
+                <p class="text-muted">
+                    {% trans "Identificación y análisis de conflictos en las planificaciones generadas." %}
+                </p>
+                <a href="{% url 'turnos:reporte_conflictos' %}" class="btn btn-danger">
+                    <i class="fas fa-eye me-2"></i>{% trans "Ver Reporte" %}
+                </a>
+                {% if stats.conflictos_activos > 0 %}
+                    <div class="mt-3">
+                        <span class="badge bg-danger">
+                            {{ stats.conflictos_activos }} {% trans "conflictos activos" %}
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-light">
+                <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>{% trans "Actualizado hace" %} {{ stats.ultima_actualizacion_conflictos|timesince }}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reporte de Tendencias -->
+    <div class="col-lg-4 mb-4">
+        <div class="card report-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="report-icon bg-success mb-3">
+                    <i class="fas fa-chart-area fa-3x text-white"></i>
+                </div>
+                <h4>{% trans "Tendencias" %}</h4>
+                <p class="text-muted">
+                    {% trans "Análisis temporal de ejecuciones, tiempos y tasas de éxito a lo largo del tiempo." %}
+                </p>
+                <a href="{% url 'turnos:reporte_tendencias' %}" class="btn btn-success">
+                    <i class="fas fa-eye me-2"></i>{% trans "Ver Reporte" %}
+                </a>
+            </div>
+            <div class="card-footer bg-light">
+                <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>{% trans "Actualizado hace" %} {{ stats.ultima_actualizacion_tendencias|timesince }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resumen Rápido -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-tachometer-alt me-2"></i>{% trans "Resumen General" %}
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-summary text-center p-3">
+                    <i class="fas fa-cogs fa-2x text-primary mb-2"></i>
+                    <h3 class="mb-0">{{ stats.total_configuraciones }}</h3>
+                    <small class="text-muted">{% trans "Configuraciones" %}</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-summary text-center p-3">
+                    <i class="fas fa-play-circle fa-2x text-success mb-2"></i>
+                    <h3 class="mb-0">{{ stats.total_ejecuciones }}</h3>
+                    <small class="text-muted">{% trans "Ejecuciones" %}</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-summary text-center p-3">
+                    <i class="fas fa-user-nurse fa-2x text-info mb-2"></i>
+                    <h3 class="mb-0">{{ stats.total_enfermeras }}</h3>
+                    <small class="text-muted">{% trans "Enfermeras" %}</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-summary text-center p-3">
+                    <i class="fas fa-calendar-check fa-2x text-warning mb-2"></i>
+                    <h3 class="mb-0">{{ stats.total_turnos_asignados }}</h3>
+                    <small class="text-muted">{% trans "Turnos Asignados" %}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Exportación Rápida -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-download me-2"></i>{% trans "Exportación Rápida" %}
+        </h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">
+            {% trans "Exporta reportes consolidados en diferentes formatos." %}
+        </p>
+        <div class="btn-group" role="group">
+            <a href="{% url 'turnos:exportar_reporte_completo' %}?formato=pdf" class="btn btn-outline-danger">
+                <i class="fas fa-file-pdf me-2"></i>PDF Completo
+            </a>
+            <a href="{% url 'turnos:exportar_reporte_completo' %}?formato=excel" class="btn btn-outline-success">
+                <i class="fas fa-file-excel me-2"></i>Excel Completo
+            </a>
+            <a href="{% url 'turnos:exportar_reporte_completo' %}?formato=csv" class="btn btn-outline-info">
+                <i class="fas fa-file-csv me-2"></i>CSV
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.report-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.report-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    transform: translateY(-5px);
+}
+
+.report-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.stat-summary {
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.stat-summary:hover {
+    background: #e9ecef;
+    transform: translateY(-3px);
+}
+</style>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load turnos_extras %}
+
+{% block title %}{% trans "Dashboard" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header del Dashboard -->
+    <div class="dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="dashboard-title">
+                    <i class="fas fa-tachometer-alt me-2"></i>{% trans "Dashboard" %}
+                </h2>
+                <p class="dashboard-subtitle">
+                    {% trans "Bienvenido/a," %} <strong>{{ user.get_full_name|default:user.username }}</strong>
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="btn-group">
+                    <a href="{% url 'turnos:config_wizard' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>{% trans "Nueva Configuración" %}
+                    </a>
+                    <a href="{% url 'turnos:enfermera_lista' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-user-nurse me-2"></i>{% trans "Enfermeras" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Estadísticas -->
+    <div class="stats-grid mb-4">
+        <div class="stat-card">
+            <div class="stat-card-icon primary">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <div class="stat-card-content">
+                <div class="stat-card-value">{{ stats.total_configuraciones }}</div>
+                <div class="stat-card-label">{% trans "Configuraciones" %}</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-card-content">
+                <div class="stat-card-value">{{ stats.ejecuciones_completadas }}</div>
+                <div class="stat-card-label">{% trans "Ejecuciones Exitosas" %}</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon warning">
+                <i class="fas fa-user-nurse"></i>
+            </div>
+            <div class="stat-card-content">
+                <div class="stat-card-value">{{ stats.total_enfermeras }}</div>
+                <div class="stat-card-label">{% trans "Enfermeras Activas" %}</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon info">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="stat-card-content">
+                <div class="stat-card-value">{{ stats.dias_planificados }}</div>
+                <div class="stat-card-label">{% trans "Días Planificados" %}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Ejecuciones Recientes -->
+        <div class="col-lg-8">
+            <div class="card recent-executions mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>{% trans "Ejecuciones Recientes" %}
+                        </h5>
+                        <a href="{% url 'turnos:ejecucion_lista' %}" class="btn btn-sm btn-outline-primary">
+                            {% trans "Ver todas" %}
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if ejecuciones_recientes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Configuración" %}</th>
+                                    <th>{% trans "Estado" %}</th>
+                                    <th>{% trans "Fecha" %}</th>
+                                    <th>{% trans "Duración" %}</th>
+                                    <th>{% trans "Acciones" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ejecucion in ejecuciones_recientes %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ ejecucion.configuracion.nombre }}</strong>
+                                    </td>
+                                    <td>{{ ejecucion.estado|estado_badge }}</td>
+                                    <td>{{ ejecucion.fecha_inicio|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        {% if ejecucion.duracion %}
+                                            {{ ejecucion.duracion|format_duration }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'turnos:ejecucion_detalle' ejecucion.id %}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center text-muted py-4">
+                        {% trans "No hay ejecuciones recientes" %}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones Rápidas y Actividad -->
+        <div class="col-lg-4">
+            <div class="card quick-actions mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>{% trans "Acciones Rápidas" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'turnos:config_wizard' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-magic me-2"></i>{% trans "Crear Configuración" %}
+                        </a>
+                        <a href="{% url 'turnos:enfermera_nueva' %}" class="btn btn-outline-success">
+                            <i class="fas fa-user-plus me-2"></i>{% trans "Añadir Enfermera" %}
+                        </a>
+                        <a href="{% url 'turnos:tipo_turno_lista' %}" class="btn btn-outline-info">
+                            <i class="fas fa-clock me-2"></i>{% trans "Gestionar Turnos" %}
+                        </a>
+                        <a href="{% url 'turnos:reportes' %}" class="btn btn-outline-warning">
+                            <i class="fas fa-chart-bar me-2"></i>{% trans "Ver Reportes" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {% if actividad_reciente %}
+            <div class="card recent-activity">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-stream me-2"></i>{% trans "Actividad Reciente" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="activity-list">
+                        {% for actividad in actividad_reciente %}
+                        <li class="activity-item">
+                            <div class="activity-icon {{ actividad.tipo }}">
+                                <i class="fas {{ actividad.icono }}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">{{ actividad.titulo }}</div>
+                                <div class="activity-description">{{ actividad.descripcion }}</div>
+                                <div class="activity-time">{{ actividad.fecha|time_ago }}</div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}

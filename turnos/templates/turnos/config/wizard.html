@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Wizard de Configuración" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/wizard.css' %}">
+{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{% url 'turnos:config_lista' %}">{% trans "Configuraciones" %}</a></li>
+    <li class="breadcrumb-item active">{% trans "Nueva Configuración" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="wizard-container">
+    <!-- Progreso del wizard -->
+    <div class="wizard-progress mb-4">
+        <div class="wizard-progress-bar" style="width: 25%;"></div>
+    </div>
+
+    <!-- Indicadores de pasos -->
+    <div class="wizard-steps">
+        <div class="wizard-step active" data-step="1">
+            <div class="step-number">1</div>
+            <div class="step-title">{% trans "Datos Básicos" %}</div>
+            <div class="step-description">{% trans "Información general" %}</div>
+        </div>
+        <div class="wizard-step" data-step="2">
+            <div class="step-number">2</div>
+            <div class="step-title">{% trans "Demanda" %}</div>
+            <div class="step-description">{% trans "Requisitos por turno" %}</div>
+        </div>
+        <div class="wizard-step" data-step="3">
+            <div class="step-number">3</div>
+            <div class="step-title">{% trans "Restricciones Duras" %}</div>
+            <div class="step-description">{% trans "Reglas obligatorias" %}</div>
+        </div>
+        <div class="wizard-step" data-step="4">
+            <div class="step-number">4</div>
+            <div class="step-title">{% trans "Restricciones Blandas" %}</div>
+            <div class="step-description">{% trans "Preferencias opcionales" %}</div>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <form method="post" id="configuracion-form" action="{% url 'turnos:config_wizard' %}">
+        {% csrf_token %}
+
+        <!-- Campos ocultos para restricciones -->
+        <input type="hidden" id="restricciones_duras_json" name="restricciones_duras" value="">
+        <input type="hidden" id="restricciones_blandas_json" name="restricciones_blandas" value="">
+
+        <!-- Paso 1: Datos Básicos -->
+        {% include 'turnos/config/paso1.html' %}
+
+        <!-- Paso 2: Demanda por Turno -->
+        {% include 'turnos/config/paso2.html' %}
+
+        <!-- Paso 3: Restricciones Duras -->
+        {% include 'turnos/config/paso3.html' %}
+
+        <!-- Paso 4: Restricciones Blandas -->
+        {% include 'turnos/config/paso4.html' %}
+    </form>
+
+    <!-- Navegación del wizard -->
+    <div class="wizard-navigation">
+        <button type="button" id="btn-prev" class="btn btn-secondary btn-prev">
+            <i class="fas fa-arrow-left me-2"></i>{% trans "Anterior" %}
+        </button>
+        <div>
+            <button type="button" id="btn-next" class="btn btn-primary btn-next">
+                {% trans "Siguiente" %}<i class="fas fa-arrow-right ms-2"></i>
+            </button>
+            <button type="submit" id="btn-submit" class="btn btn-success btn-submit" style="display: none;" form="configuracion-form">
+                <i class="fas fa-check me-2"></i>{% trans "Crear Configuración" %}
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/wizard.js' %}"></script>
+<script src="{% static 'js/restricciones.js' %}"></script>
+{% endblock %}

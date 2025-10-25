@@ -1,0 +1,268 @@
+<div class="step-content" data-step="1">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-info-circle me-2"></i>{% trans "Paso 1: Datos Básicos" %}
+            </h5>
+        </div>
+        <div class="card-body">
+            <!-- Información General -->
+            <div class="form-section">
+                <h5 class="form-section-title">{% trans "Información General" %}</h5>
+                <p class="form-section-description">
+                    {% trans "Proporciona los datos básicos de la configuración de planificación." %}
+                </p>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="id_nombre" class="form-label fw-bold">
+                                <i class="fas fa-tag me-2"></i>{% trans "Nombre de la Configuración" %} *
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="id_nombre"
+                                   name="nombre"
+                                   placeholder="{% trans 'Ej: Planificación Enero 2025' %}"
+                                   required>
+                            <div class="form-text">
+                                {% trans "Un nombre descriptivo para identificar esta configuración" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="id_activa" class="form-label fw-bold">
+                                <i class="fas fa-toggle-on me-2"></i>{% trans "Estado" %}
+                            </label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="id_activa"
+                                       name="activa"
+                                       checked>
+                                <label class="form-check-label" for="id_activa">
+                                    {% trans "Activa" %}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_descripcion" class="form-label fw-bold">
+                        <i class="fas fa-align-left me-2"></i>{% trans "Descripción" %}
+                    </label>
+                    <textarea class="form-control"
+                              id="id_descripcion"
+                              name="descripcion"
+                              rows="3"
+                              placeholder="{% trans 'Describe el propósito de esta configuración...' %}"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="id_num_dias" class="form-label fw-bold">
+                                <i class="fas fa-calendar-alt me-2"></i>{% trans "Número de Días" %} *
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="id_num_dias"
+                                   name="num_dias"
+                                   min="1"
+                                   max="90"
+                                   value="30"
+                                   required>
+                            <div class="form-text">
+                                {% trans "Días a planificar (1-90)" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="id_fecha_inicio" class="form-label fw-bold">
+                                <i class="fas fa-calendar-day me-2"></i>{% trans "Fecha de Inicio" %} *
+                            </label>
+                            <input type="date"
+                                   class="form-control"
+                                   id="id_fecha_inicio"
+                                   name="fecha_inicio"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="id_num_trabajadores" class="form-label fw-bold">
+                                <i class="fas fa-users me-2"></i>{% trans "Trabajadores Simultáneos" %} *
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="id_num_trabajadores"
+                                   name="num_trabajadores"
+                                   min="1"
+                                   max="10"
+                                   value="4"
+                                   required>
+                            <div class="form-text">
+                                {% trans "Número de hilos paralelos" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_tiempo_maximo" class="form-label fw-bold">
+                                <i class="fas fa-clock me-2"></i>{% trans "Tiempo Máximo (segundos)" %} *
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="id_tiempo_maximo"
+                                   name="tiempo_maximo_segundos"
+                                   min="10"
+                                   max="600"
+                                   value="60"
+                                   required>
+                            <div class="form-text">
+                                {% trans "Tiempo máximo de ejecución (10-600 segundos)" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_seed" class="form-label fw-bold">
+                                <i class="fas fa-random me-2"></i>{% trans "Semilla Aleatoria" %}
+                            </label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="id_seed"
+                                   name="seed"
+                                   placeholder="{% trans 'Opcional' %}">
+                            <div class="form-text">
+                                {% trans "Para reproducibilidad (opcional)" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selección de Enfermeras -->
+            <div class="form-section">
+                <h5 class="form-section-title">{% trans "Enfermeras Participantes" %}</h5>
+                <p class="form-section-description">
+                    {% trans "Selecciona las enfermeras que formarán parte de esta planificación." %}
+                </p>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text"
+                               class="form-control mb-3"
+                               id="buscar-enfermeras"
+                               placeholder="{% trans 'Buscar enfermera...' %}">
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <span id="contador-enfermeras" class="badge bg-primary">0 seleccionadas</span>
+                    </div>
+                </div>
+
+                <div class="selection-list">
+                    {% for enfermera in enfermeras %}
+                    <div class="selection-item">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="enfermeras"
+                               value="{{ enfermera.id }}"
+                               id="enf_{{ enfermera.id }}">
+                        <label for="enf_{{ enfermera.id }}" class="ms-2">
+                            {{ enfermera.nombre }}
+                            {% if not enfermera.activa %}
+                                <span class="badge bg-secondary ms-2">{% trans "Inactiva" %}</span>
+                            {% endif %}
+                        </label>
+                    </div>
+                    {% empty %}
+                    <div class="alert alert-warning">
+                        {% trans "No hay enfermeras disponibles. Por favor, añade enfermeras primero." %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Selección de Tipos de Turno -->
+            <div class="form-section">
+                <h5 class="form-section-title">{% trans "Tipos de Turno" %}</h5>
+                <p class="form-section-description">
+                    {% trans "Selecciona los tipos de turno que se utilizarán en la planificación." %}
+                </p>
+
+                <div class="row">
+                    {% for turno in tipos_turno %}
+                    <div class="col-md-4">
+                        <div class="card mb-3 turno-card">
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                           class="form-check-input"
+                                           name="turnos"
+                                           value="{{ turno.id }}"
+                                           id="turno_{{ turno.id }}">
+                                    <label for="turno_{{ turno.id }}" class="form-check-label fw-bold">
+                                        {{ turno.get_nombre_display }}
+                                    </label>
+                                </div>
+                                <div class="mt-2 text-muted small">
+                                    <i class="fas fa-clock me-1"></i>
+                                    {{ turno.hora_inicio|time:"H:i" }} - {{ turno.hora_fin|time:"H:i" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-warning">
+                            {% trans "No hay tipos de turno configurados." %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Contador de enfermeras seleccionadas
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('input[name="enfermeras"]');
+    const contador = document.getElementById('contador-enfermeras');
+
+    function actualizarContador() {
+        const seleccionadas = document.querySelectorAll('input[name="enfermeras"]:checked').length;
+        contador.textContent = `${seleccionadas} seleccionadas`;
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', actualizarContador);
+    });
+
+    // Búsqueda de enfermeras
+    const buscador = document.getElementById('buscar-enfermeras');
+    if (buscador) {
+        buscador.addEventListener('input', function(e) {
+            const termino = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.selection-item');
+
+            items.forEach(item => {
+                const texto = item.textContent.toLowerCase();
+                item.style.display = texto.includes(termino) ? '' : 'none';
+            });
+        });
+    }
+});
+</script>
